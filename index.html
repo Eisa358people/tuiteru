@@ -47,6 +47,8 @@ button {
 <h1>🍀 ツイてるカウンター 🍀</h1>
 
 <div id="count">0</div>
+ <div id="total">総合計：0回</div>
+   
 
 <button onclick="startVoice()">🎤 スタート</button>
 
@@ -70,8 +72,15 @@ let stopping = false;
 function countUp() {
     count++;
     document.getElementById("count").textContent = count;
-}
 
+    let total = Number(localStorage.getItem("tuiteruTotal") || 0);
+    total++;
+
+    localStorage.setItem("tuiteruTotal", total);
+
+    document.getElementById("total").textContent =
+        "総合計：" + total + "回";
+}
 function resetCount() {
     count = 0;
     document.getElementById("count").textContent = count;
