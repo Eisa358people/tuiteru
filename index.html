@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -43,17 +44,22 @@ button {
 
 <div id="count">0</div>
 
-<button onclick="startVoice()">🎤 ツイてる！</button>
+<button onclick="startVoice()">🎤 スタート</button>
+
+<button onclick="stopVoice()">⏹ 停止</button>
 
 <button onclick="countUp()">手動カウント</button>
 
 <div id="status">
-ボタンを押して「ツイてる！」と言ってください
+「スタート」を押して「ツイてる！」と言ってください
 </div>
 
 <script>
 
 let count = 0;
+let recognition = null;
+let listening = false;
+let stopping = false;
 
 function countUp() {
     count++;
@@ -71,6 +77,50 @@ function sayTuiteru() {
     window.speechSynthesis.speak(speech);
 }
 
+function isTuiteru(text) {
+
+    text = text
+        .replace(/[！!。、，,？?]/g, "")
+        .replace(/\s/g, "");
+
+    const patterns = [
+        "ツイてる",
+        "ついてる",
+        "ツイテル",
+        "ついている",
+        "ツイッテル",
+        "ついてます",
+        "ツイてます",
+        "ついてるよ",
+        "ツイてるよ"
+    ];
+
+    for (const word of patterns) {
+        if (text.includes(word)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function listenAgain() {
+
+    if (!listening || stopping) {
+        return;
+    }
+
+    try {
+        recognition.start();
+
+        document.getElementById("status").textContent =
+            "🎤 聞いています……「ツイてる！」";
+
+    } catch (e) {
+        setTimeout(listenAgain, 300);
+    }
+}
+
 function startVoice() {
 
     const SpeechRecognition =
@@ -85,30 +135,35 @@ function startVoice() {
         return;
     }
 
-    const recognition = new SpeechRecognition();
+    if (listening) {
+        return;
+    }
+
+    stopping = false;
+    listening = true;
+
+    recognition = new SpeechRecognition();
 
     recognition.lang = "ja-JP";
     recognition.continuous = false;
     recognition.interimResults = false;
-
-    document.getElementById("status").textContent =
-        "🎤 聞いています……";
-
-    recognition.start();
+    recognition.maxAlternatives = 5;
 
     recognition.onresult = function(event) {
 
-        const text = event.results[0][0].transcript;
+        let recognized = false;
 
-        document.getElementById("status").textContent =
-            "聞き取りました：「" + text + "」";
+        for (let i = 0; i < event.results[0].length; i++) {
 
-        if (
-            text.includes("ツイてる") ||
-            text.includes("ついてる") ||
-            text.includes("ツイテル") ||
-            text.includes("ついている")
-        ) {
+            const text = event.results[0][i].transcript;
+
+            if (isTuiteru(text)) {
+                recognized = true;
+                break;
+            }
+        }
+
+        if (recognized) {
 
             countUp();
 
@@ -116,14 +171,47 @@ function startVoice() {
                 "🍀 ツイてる！";
 
             sayTuiteru();
+
+        } else {
+
+            document.getElementById("status").textContent =
+                "もう一度「ツイてる！」";
+
         }
     };
 
     recognition.onerror = function() {
 
-        document.getElementById("status").textContent =
-            "うまく聞き取れませんでした。もう一度どうぞ。";
+        if (!stopping) {
+            setTimeout(listenAgain, 300);
+        }
     };
+
+    recognition.onend = function() {
+
+        if (!stopping) {
+            setTimeout(listenAgain, 300);
+        }
+    };
+
+    listenAgain();
+}
+
+function stopVoice() {
+
+    stopping = true;
+    listening = false;
+
+    if (recognition) {
+        try {
+            recognition.stop();
+        } catch (e) {
+        }
+    }
+
+    document.getElementById("status").textContent =
+        "⏹ 停止しました";
+
 }
 
 </script>
