@@ -1,33 +1,40 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>ツイてるカウンター</title>
+<title>🍀 ツイてるカウンター 🍀</title>
 
 <style>
-    body {
-        text-align: center;
-        font-family: sans-serif;
-        padding-top: 80px;
-        background: #f5fff5;
-    }
+body {
+    text-align: center;
+    font-family: sans-serif;
+    padding-top: 60px;
+    background: #f5fff5;
+}
 
-    h1 {
-        font-size: 40px;
-    }
+h1 {
+    font-size: 40px;
+}
 
-    #count {
-        font-size: 100px;
-        margin: 40px;
-    }
+#count {
+    font-size: 100px;
+    margin: 30px;
+}
 
-    button {
-        font-size: 25px;
-        padding: 15px 30px;
-        border-radius: 15px;
-        border: none;
-        cursor: pointer;
-    }
+button {
+    font-size: 25px;
+    padding: 15px 30px;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    margin: 10px;
+}
+
+#status {
+    font-size: 20px;
+    margin: 20px;
+}
 </style>
 </head>
 
@@ -37,15 +44,89 @@
 
 <div id="count">0</div>
 
-<button onclick="countUp()">ツイてる！</button>
+<button onclick="startVoice()">🎤 ツイてる！</button>
+
+<button onclick="countUp()">手動カウント</button>
+
+<div id="status">
+ボタンを押して「ツイてる！」と言ってください
+</div>
 
 <script>
+
 let count = 0;
 
 function countUp() {
     count++;
     document.getElementById("count").textContent = count;
 }
+
+function sayTuiteru() {
+
+    const speech = new SpeechSynthesisUtterance("ツイてる！");
+    speech.lang = "ja-JP";
+    speech.rate = 1.0;
+    speech.pitch = 1.1;
+
+    window.speechSynthesis.cancel();
+    window.speechSynthesis.speak(speech);
+}
+
+function startVoice() {
+
+    const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+
+        document.getElementById("status").textContent =
+            "このブラウザは音声認識に対応していません。";
+
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+
+    recognition.lang = "ja-JP";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    document.getElementById("status").textContent =
+        "🎤 聞いています……";
+
+    recognition.start();
+
+    recognition.onresult = function(event) {
+
+        const text = event.results[0][0].transcript;
+
+        document.getElementById("status").textContent =
+            "聞き取りました：「" + text + "」";
+
+        if (
+            text.includes("ツイてる") ||
+            text.includes("ついてる") ||
+            text.includes("ツイテル") ||
+            text.includes("ついている")
+        ) {
+
+            countUp();
+
+            document.getElementById("status").textContent =
+                "🍀 ツイてる！";
+
+            sayTuiteru();
+        }
+    };
+
+    recognition.onerror = function() {
+
+        document.getElementById("status").textContent =
+            "うまく聞き取れませんでした。もう一度どうぞ。";
+    };
+}
+
 </script>
 
 </body>
