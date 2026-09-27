@@ -1,4 +1,8 @@
 
+熊谷大和
+0:53 (0 分前)
+To 自分
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -50,6 +54,8 @@ button {
 
 <button onclick="countUp()">手動カウント</button>
 
+<button onclick="resetCount()">🔄 リセット</button>
+
 <div id="status">
 「スタート」を押して「ツイてる！」と言ってください
 </div>
@@ -64,6 +70,13 @@ let stopping = false;
 function countUp() {
     count++;
     document.getElementById("count").textContent = count;
+}
+
+function resetCount() {
+    count = 0;
+    document.getElementById("count").textContent = count;
+    document.getElementById("status").textContent =
+        "🔄 リセットしました";
 }
 
 function sayTuiteru() {
@@ -92,7 +105,8 @@ function isTuiteru(text) {
         "ついてます",
         "ツイてます",
         "ついてるよ",
-        "ツイてるよ"
+        "ツイてるよ",
+        "シンテル"
     ];
 
     for (const word of patterns) {
@@ -152,6 +166,7 @@ function startVoice() {
     recognition.onresult = function(event) {
 
         let recognized = false;
+        let heardText = event.results[0][0].transcript;
 
         for (let i = 0; i < event.results[0].length; i++) {
 
@@ -175,7 +190,7 @@ function startVoice() {
         } else {
 
             document.getElementById("status").textContent =
-                "もう一度「ツイてる！」";
+                "👂「" + heardText + "」と聞こえました";
 
         }
     };
@@ -211,7 +226,6 @@ function stopVoice() {
 
     document.getElementById("status").textContent =
         "⏹ 停止しました";
-
 }
 
 </script>
