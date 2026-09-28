@@ -1,41 +1,54 @@
 
+熊谷大和
+12:07 (0 分前)
+To 自分
 
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🍀 ツイてるカウンター 🍀</title>
 
 <style>
 body {
     text-align: center;
     font-family: sans-serif;
-    padding-top: 60px;
+    padding-top: 40px;
     background: #f5fff5;
 }
 
 h1 {
     font-size: 40px;
+    margin-bottom: 20px;
 }
 
 #count {
     font-size: 100px;
-    margin: 30px;
+    margin: 20px;
+}
+
+#total {
+    font-size: 28px;
+    margin: 20px;
 }
 
 button {
-    font-size: 25px;
-    padding: 15px 30px;
-    border-radius: 15px;
+    font-size: 28px;
+    padding: 18px 24px;
+    border-radius: 16px;
     border: none;
     cursor: pointer;
-    margin: 10px;
+    margin: 8px 5px;
+    min-width: 160px;
+    line-height: 1.2;
 }
 
 #status {
     font-size: 20px;
-    margin: 20px;
+    margin: 25px 10px;
 }
+
 </style>
 </head>
 
@@ -44,8 +57,8 @@ button {
 <h1>🍀 ツイてるカウンター 🍀</h1>
 
 <div id="count">0</div>
- <div id="total">総合計：0回</div>
-   
+
+<div id="total">総合計：0回</div>
 
 <button onclick="startVoice()">🎤 スタート</button>
 
@@ -66,69 +79,72 @@ let recognition = null;
 let listening = false;
 let stopping = false;
 
+
+/* =========================
+   カウント処理
+========================= */
+
 function countUp() {
+
     count++;
+
     document.getElementById("count").textContent = count;
 
-    let total = Number(localStorage.getItem("tuiteruTotal") || 0);
+    let total = Number(
+        localStorage.getItem("tuiteruTotal") || 0
+    );
+
     total++;
 
-    localStorage.setItem("tuiteruTotal", total);
+    localStorage.setItem(
+        "tuiteruTotal",
+        total
+    );
 
     document.getElementById("total").textContent =
         "総合計：" + total + "回";
 }
 
-window.addEventListener("load", function() {
-    const total = Number(localStorage.getItem("tuiteruTotal") || 0);
-    document.getElementById("total").textContent =
-        "総合計：" + total + "回";
-});
+
+/* =========================
+   リセット
+========================= */
+
 function resetCount() {
+
     count = 0;
-    document.getElementById("count").textContent = count;
+
+    document.getElementById("count").textContent =
+        count;
+
     document.getElementById("status").textContent =
         "🔄 リセットしました";
 }
 
+
+/* =========================
+   ツイてる！と言う
+========================= */
+
 function sayTuiteru() {
 
-    const speech = new SpeechSynthesisUtterance("ツイてる！");
+    const speech =
+        new SpeechSynthesisUtterance("ツイてる！");
+
     speech.lang = "ja-JP";
     speech.rate = 1.0;
     speech.pitch = 1.1;
 
     window.speechSynthesis.cancel();
+
     window.speechSynthesis.speak(speech);
 }
 
-function countTuiteru(text) {
 
-    text = text
-        .replace(/[！!。、，,？?]/g, "")
-        .replace(/\s/g, "");
+/* =========================
+   「ツイてる」の回数を数える
+========================= */
 
-    const patterns = [
-        "ツイてる",
-        "ついてる",
-        "ツイテル",
-        "ついている",
-        "ツイッテル",
-        "ついてます",
-        "ツイてます",
-        "ついてるよ",
-        "ツイてるよ",
-        "シンテル"
-    ];
-
-    for (const word of patterns) {
-        if (text.includes(word)) {
-            return true;
-        }
-    }
-
-    return false;
-}
 function countTuiteru(text) {
 
     text = text
@@ -138,9 +154,33 @@ function countTuiteru(text) {
     const pattern =
         /ついている|ついてます|ついてるよ|ツイてるよ|ツイッテル|ツイてます|ツイてる|ついてる|ツイテル|シンテル/g;
 
-    const matches = text.match(pattern);
+    const matches =
+        text.match(pattern);
 
     return matches ? matches.length : 0;
+}
+
+
+/* =========================
+   ページを開いた時
+   総合計を復元
+========================= */
+
+window.addEventListener("load", function() {
+
+    const total =
+        Number(
+            localStorage.getItem("tuiteruTotal") || 0
+        );
+
+    document.getElementById("total").textContent =
+        "総合計：" + total + "回";
+});
+
+
+/* =========================
+   音声認識をもう一度開始
+========================= */
 
 function listenAgain() {
 
@@ -149,15 +189,25 @@ function listenAgain() {
     }
 
     try {
+
         recognition.start();
 
         document.getElementById("status").textContent =
             "🎤 聞いています……「ツイてる！」";
 
     } catch (e) {
-        setTimeout(listenAgain, 300);
+
+        setTimeout(
+            listenAgain,
+            300
+        );
     }
 }
+
+
+/* =========================
+   音声認識スタート
+========================= */
 
 function startVoice() {
 
@@ -180,75 +230,138 @@ function startVoice() {
     stopping = false;
     listening = true;
 
-    recognition = new SpeechRecognition();
+    recognition =
+        new SpeechRecognition();
 
     recognition.lang = "ja-JP";
+
     recognition.continuous = false;
+
     recognition.interimResults = false;
+
     recognition.maxAlternatives = 5;
 
-    recognition.onresult = function(event) {
 
-      let hitCount = 0;
-let heardText = event.results[0][0].transcript;
+    /* =====================
+       音声認識結果
+    ===================== */
 
-for (let i = 0; i < event.results[0].length; i++) {
+    recognition.onresult =
+        function(event) {
 
-    const text = event.results[0][i].transcript;
-    const n = countTuiteru(text);
+            let hitCount = 0;
 
-    if (n > hitCount) {
-        hitCount = n;
-    }
-}
+            let heardText =
+                event.results[0][0].transcript;
 
-        
-if (hitCount > 0) {
 
-            
-for (let i = 0; i < hitCount; i++) {
-    countUp();
-}
+            for (
+                let i = 0;
+                i < event.results[0].length;
+                i++
+            ) {
 
-            document.getElementById("status").textContent =
-                "🍀 ツイてる！";
+                const text =
+                    event.results[0][i].transcript;
 
-            sayTuiteru();
+                const n =
+                    countTuiteru(text);
 
-        } else {
+                if (n > hitCount) {
 
-            document.getElementById("status").textContent =
-                "👂「" + heardText + "」と聞こえました";
+                    hitCount = n;
+                }
+            }
 
-        }
-    };
 
-    recognition.onerror = function() {
+            /* =================
+               ツイてるを認識
+            ================= */
 
-        if (!stopping) {
-            setTimeout(listenAgain, 300);
-        }
-    };
+            if (hitCount > 0) {
 
-    recognition.onend = function() {
+                for (
+                    let i = 0;
+                    i < hitCount;
+                    i++
+                ) {
 
-        if (!stopping) {
-            setTimeout(listenAgain, 300);
-        }
-    };
+                    countUp();
+                }
+
+                document.getElementById("status").textContent =
+                    "🍀 ツイてる！ × " + hitCount;
+
+                sayTuiteru();
+
+            } else {
+
+                document.getElementById("status").textContent =
+                    "👂「" + heardText + "」と聞こえました";
+            }
+        };
+
+
+    /* =====================
+       エラー
+    ===================== */
+
+    recognition.onerror =
+        function() {
+
+            if (!stopping) {
+
+                setTimeout(
+                    listenAgain,
+                    300
+                );
+            }
+        };
+
+
+    /* =====================
+       音声認識終了
+    ===================== */
+
+    recognition.onend =
+        function() {
+
+            if (!stopping) {
+
+                setTimeout(
+                    listenAgain,
+                    300
+                );
+            }
+        };
+
+
+    /* =====================
+       開始
+    ===================== */
 
     listenAgain();
 }
 
+
+/* =========================
+   停止
+========================= */
+
 function stopVoice() {
 
     stopping = true;
+
     listening = false;
 
     if (recognition) {
+
         try {
+
             recognition.stop();
+
         } catch (e) {
+
         }
     }
 
