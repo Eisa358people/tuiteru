@@ -1,7 +1,4 @@
 
-熊谷大和
-0:53 (0 分前)
-To 自分
 
 <!DOCTYPE html>
 <html lang="ja">
@@ -105,7 +102,7 @@ function sayTuiteru() {
     window.speechSynthesis.speak(speech);
 }
 
-function isTuiteru(text) {
+function countTuiteru(text) {
 
     text = text
         .replace(/[！!。、，,？?]/g, "")
@@ -132,6 +129,18 @@ function isTuiteru(text) {
 
     return false;
 }
+function countTuiteru(text) {
+
+    text = text
+        .replace(/[！!。、，,？?]/g, "")
+        .replace(/\s/g, "");
+
+    const pattern =
+        /ついている|ついてます|ついてるよ|ツイてるよ|ツイッテル|ツイてます|ツイてる|ついてる|ツイテル|シンテル/g;
+
+    const matches = text.match(pattern);
+
+    return matches ? matches.length : 0;
 
 function listenAgain() {
 
@@ -180,22 +189,26 @@ function startVoice() {
 
     recognition.onresult = function(event) {
 
-        let recognized = false;
-        let heardText = event.results[0][0].transcript;
+      let hitCount = 0;
+let heardText = event.results[0][0].transcript;
 
-        for (let i = 0; i < event.results[0].length; i++) {
+for (let i = 0; i < event.results[0].length; i++) {
 
-            const text = event.results[0][i].transcript;
+    const text = event.results[0][i].transcript;
+    const n = countTuiteru(text);
 
-            if (isTuiteru(text)) {
-                recognized = true;
-                break;
-            }
-        }
+    if (n > hitCount) {
+        hitCount = n;
+    }
+}
 
-        if (recognized) {
+        
+if (hitCount > 0) {
 
-            countUp();
+            
+for (let i = 0; i < hitCount; i++) {
+    countUp();
+}
 
             document.getElementById("status").textContent =
                 "🍀 ツイてる！";
