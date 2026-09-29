@@ -488,7 +488,23 @@ function closeSettings() {
 }
 
 function showDailyRecords() {
-    alert("📅 日別記録はこれから作ります！");
+    const dailyRecords = JSON.parse(
+        localStorage.getItem("tuiteruDailyRecords") || "{}"
+    );
+
+    let message = "📅 日別記録\n\n";
+
+    const dates = Object.keys(dailyRecords).reverse();
+
+    if (dates.length === 0) {
+        message += "まだ記録がありません。";
+    } else {
+        dates.forEach(function(date) {
+            message += date + "　" + dailyRecords[date] + "回\n";
+        });
+    }
+
+    alert(message);
 }
 </script>
 
