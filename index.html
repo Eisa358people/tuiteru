@@ -172,6 +172,17 @@ let count = 0;
 let recognition = null;
 let listening = false;
 let stopping = false;
+let currentDate = new Date().toLocaleDateString("ja-JP");
+setInterval(function() {
+    const today = new Date().toLocaleDateString("ja-JP");
+
+    if (today !== currentDate) {
+        currentDate = today;
+
+        document.getElementById("status").textContent =
+            "🌅 新しい一日が始まりました！";
+    }
+}, 1000);
 
 
 /* =========================
