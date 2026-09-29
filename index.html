@@ -147,7 +147,21 @@ button:nth-of-type(4) {
 
 <button onclick="resetCount()">🔄 リセット</button>
 <button onclick="openSettings()">⚙️ 設定</button>
+<div id="settings" style="display:none; margin-top:20px;">
 
+    <h2>⚙️ 設定</h2>
+
+    <button onclick="showDailyRecords()">
+        📅 日別記録
+    </button>
+
+    <br>
+
+    <button onclick="closeSettings()">
+        閉じる
+    </button>
+
+</div>
 <div id="status">
 「スタート」を押して「ツイてる！」と言ってください
 </div>
