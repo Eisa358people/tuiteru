@@ -519,27 +519,28 @@ function openSettings() {
 
 function closeSettings() {
     document.getElementById("settings").style.display = "none";
+    <div id="dailyRecords" style="display:none; margin-top:20px;">
+
+    <h2>🍀 ツイてる記録 🍀</h2>
+
+    <div id="todayRecord"></div>
+
+    <hr>
+
+    <h3>📅 過去の記録</h3>
+
+    <div id="pastRecords"></div>
+
+    <br>
+
+    <button onclick="closeDailyRecords()">
+        閉じる
+    </button>
+
+</div>
 }
 
-function showDailyRecords() {
-    const dailyRecords = JSON.parse(
-        localStorage.getItem("tuiteruDailyRecords") || "{}"
-    );
 
-    let message = "📅 日別記録\n\n";
-
-    const dates = Object.keys(dailyRecords).reverse();
-
-    if (dates.length === 0) {
-        message += "まだ記録がありません。";
-    } else {
-        dates.forEach(function(date) {
-            message += date + "　" + dailyRecords[date] + "回\n";
-        });
-    }
-
-    alert(message);
-}
 </script>
 
 </body>
