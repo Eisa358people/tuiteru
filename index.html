@@ -137,7 +137,7 @@ button:nth-of-type(4) {
 
 <div id="count">0</div>
 
-<div id="total">総合計：0回</div>
+<div id="total">⭐️ 累計：：0回</div>
 
 <button onclick="startVoice()">🎤 スタート</button>
 
@@ -181,7 +181,7 @@ function countUp() {
     );
 
     document.getElementById("total").textContent =
-        "総合計：" + total + "回";
+        "⭐️ 累計：：" + total + "回";
 }
 
 
@@ -242,7 +242,7 @@ function countTuiteru(text) {
 
 /* =========================
    ページを開いた時
-   総合計を復元
+   ⭐️ 累計：を復元
 ========================= */
 
 window.addEventListener("load", function() {
@@ -253,7 +253,7 @@ window.addEventListener("load", function() {
         );
 
     document.getElementById("total").textContent =
-        "総合計：" + total + "回";
+        "⭐️ 累計：：" + total + "回";
 });
 
 
