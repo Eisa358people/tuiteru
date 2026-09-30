@@ -233,21 +233,72 @@ function showDailyRecords() {
 
     const box = document.getElementById("dailyRecords");
 
-  let message = "🍀 ツイてる記録 🍀<br><br>";
+    let message = "🍀 ツイてる記録 🍀<br><br>";
 
     const dates = Object.keys(dailyRecords).reverse();
 
     if (dates.length === 0) {
         message += "まだ記録がありません。";
     } else {
+
+        // 🌱 今日
+        const today = new Date().toLocaleDateString("ja-JP");
+
+        if (dailyRecords[today] !== undefined) {
+
+            const todayCount = dailyRecords[today];
+
+            let comment = "";
+
+            if (todayCount < 100) {
+                comment = "🌱 まずは一歩！";
+            } else if (todayCount < 1000) {
+                comment = "🍀 いい感じ！今日もツイてる！";
+            } else {
+                comment = "🎉 1,000回突破！すごーい！";
+            }
+
+            message +=
+                "<div style='font-size:20px;'>🌱 今日</div>" +
+                "<div style='font-size:40px; font-weight:bold; margin:8px;'>" +
+                todayCount + "回" +
+                "</div>" +
+                "<div style='font-size:18px; margin-bottom:25px;'>" +
+                comment +
+                "</div>";
+
+            message +=
+                "<hr style='margin:20px 0;'>";
+        }
+
+        // 📅 過去の記録
+        message +=
+            "<div style='font-size:20px; margin-bottom:10px;'>📅 過去の記録</div>";
+
         dates.forEach(function(date) {
-            message += date + "　" + dailyRecords[date] + "回<br>";
+
+            if (date !== today) {
+
+                const parts = date.split("/");
+
+                const displayDate =
+                    parts[1] + "月" + parts[2] + "日";
+
+                message +=
+                    "<div style='font-size:18px; margin:6px;'>" +
+                    displayDate +
+                    "　" +
+                    dailyRecords[date] +
+                    "回" +
+                    "</div>";
+            }
         });
     }
 
     box.innerHTML = message;
     box.style.display = "block";
 }
+
 function countUp() {
     count++;
 
