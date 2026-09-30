@@ -181,27 +181,7 @@ let count = 0;
 let recognition = null;
 let listening = false;
 let stopping = false;
-// 🍀 正式運用開始前のテスト記録を削除
-let dailyRecords = JSON.parse(
-    localStorage.getItem("tuiteruDailyRecords") || "{}"
-);
 
-Object.keys(dailyRecords).forEach(function(date) {
-
-    if (
-        date.includes("9/29") ||
-        date.includes("9/30") ||
-        date.includes("09/29") ||
-        date.includes("09/30")
-    ) {
-        delete dailyRecords[date];
-    }
-});
-
-localStorage.setItem(
-    "tuiteruDailyRecords",
-    JSON.stringify(dailyRecords)
-);
 let currentDate = new Date().toLocaleDateString("ja-JP");
 setInterval(function() {
     const today = new Date().toLocaleDateString("ja-JP");
