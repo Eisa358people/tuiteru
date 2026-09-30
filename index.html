@@ -226,7 +226,28 @@ function manualCount() {
 }
 
 
+function showDailyRecords() {
+    const dailyRecords = JSON.parse(
+        localStorage.getItem("tuiteruDailyRecords") || "{}"
+    );
 
+    const box = document.getElementById("dailyRecords");
+
+    let message = "🍀 ツイてる記録 🍀<br><br>";
+
+    const dates = Object.keys(dailyRecords).reverse();
+
+    if (dates.length === 0) {
+        message += "まだ記録がありません。";
+    } else {
+        dates.forEach(function(date) {
+            message += date + "　" + dailyRecords[date] + "回<br>";
+        });
+    }
+
+    box.innerHTML = message;
+    box.style.display = "block";
+}
 function countUp() {
     count++;
 
