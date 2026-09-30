@@ -142,15 +142,20 @@ button:nth-of-type(4) {
 <div id="count">0</div>
 
 <div id="total">⭐️ 累計：0回</div>
-<div style="font-size:22px; margin:10px 0;">🎤 音声カウント <span id="voiceSelected" style="color:red; font-size:16px;">（選択中）</span></div>
 
-<div>
+<div style="display:flex; align-items:center; justify-content:center; gap:8px;">
+    <span style="font-size:22px;">🎤 音声カウント</span>
+    <span id="voiceSelected" style="color:red; font-size:16px;">（選択中）</span>
     <button onclick="startVoice()">▶️ スタート</button>
     <button onclick="stopVoice()">⏹ 停止</button>
 </div>
 
-
-<div style="font-size:22px; margin:10px 0;">👆 手動カウント <span id="manualSelected" style="color:red; font-size:16px;"></span></div>
+<div style="font-size:22px; margin:10px 0;">
+    <button onclick="manualCount()">
+        👆 手動カウント
+    </button>
+    <span id="manualSelected" style="color:red; font-size:16px;"></span>
+</div>
 
 <button onclick="resetCount()">🔄 リセット</button>
 <button onclick="openSettings()">⚙️ 設定</button>
