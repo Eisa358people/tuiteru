@@ -187,18 +187,6 @@ setInterval(function() {
 
     if (today !== currentDate) {
 
-        // 📅 昨日の記録を保存
-        let dailyRecords = JSON.parse(
-            localStorage.getItem("tuiteruDailyRecords") || "{}"
-        );
-
-        dailyRecords[currentDate] = count;
-
-        localStorage.setItem(
-            "tuiteruDailyRecords",
-            JSON.stringify(dailyRecords)
-        );
-
         // 🌅 今日のカウントを0にする
         count = 0;
 
@@ -211,6 +199,8 @@ setInterval(function() {
             "🌅 新しい一日が始まりました！";
     }
 }, 1000);
+
+      
 
 /* =========================
    カウント処理
