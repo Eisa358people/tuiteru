@@ -147,8 +147,7 @@ button:nth-of-type(4) {
 
 <button onclick="stopVoice()">⏹ 停止</button>
 
-<button onclick="countUp()">手動カウント</button>
-
+<button onclick="manualCount()">手動カウント</button>
 <button onclick="resetCount()">🔄 リセット</button>
 <button onclick="openSettings()">⚙️ 設定</button>
 <div id="settings" style="display:none; margin-top:20px;">
@@ -212,6 +211,13 @@ setInterval(function() {
    カウント処理
 ========================= */
 
+function manualCount() {
+    if (listening) {
+        stopVoice();
+    }
+
+    countUp();
+}
 
 function countUp() {
     count++;
