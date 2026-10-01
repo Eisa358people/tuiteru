@@ -297,6 +297,18 @@ function showDailyRecords() {
             message +=
                 "<hr style='margin:20px 0;'>";
         }
+// 📚 2026年9月までの記録
+const preOctoberTotal = Number(
+    localStorage.getItem("tuiteruPreOctoberTotal") || 0
+);
+
+message +=
+    "<hr style='margin:20px 0;'>" +
+    "<div style='font-size:20px; margin-bottom:10px;'>📚 2026年9月までの記録</div>" +
+    "<div style='font-size:40px; font-weight:bold; margin:8px;'>" +
+    preOctoberTotal + "回" +
+    "</div>" +
+    "<hr style='margin:20px 0;'>";
 
         // 📅 過去の記録
         message +=
