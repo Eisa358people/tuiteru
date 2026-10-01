@@ -245,27 +245,46 @@ setInterval(function() {
 
 function manualCount() {
 
-    // 🎵 小さなタップ音
-    const audioContext =
-        new (window.AudioContext || window.webkitAudioContext)();
+// 🎵 ピコッ♪音
+const audioContext =
+    new (window.AudioContext || window.webkitAudioContext)();
 
-    const oscillator =
-        audioContext.createOscillator();
+const oscillator =
+    audioContext.createOscillator();
 
-    const gainNode =
-        audioContext.createGain();
+const gainNode =
+    audioContext.createGain();
 
-    oscillator.frequency.value = 180;
+oscillator.type = "sine";
 
-    gainNode.gain.setValueAtTime(
-        0.08,
-        audioContext.currentTime
-    );
+oscillator.frequency.setValueAtTime(
+    880,
+    audioContext.currentTime
+);
 
-    gainNode.gain.exponentialRampToValueAtTime(
-        0.001,
-        audioContext.currentTime + 0.06
-    );
+oscillator.frequency.exponentialRampToValueAtTime(
+    1320,
+    audioContext.currentTime + 0.05
+);
+
+gainNode.gain.setValueAtTime(
+    0.06,
+    audioContext.currentTime
+);
+
+gainNode.gain.exponentialRampToValueAtTime(
+    0.001,
+    audioContext.currentTime + 0.08
+);
+
+oscillator.connect(gainNode);
+gainNode.connect(audioContext.destination);
+
+oscillator.start();
+
+oscillator.stop(
+    audioContext.currentTime + 0.08
+);
 
     oscillator.connect(gainNode);
     gainNode.connect(audioContext.destination);
