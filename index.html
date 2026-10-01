@@ -240,62 +240,62 @@ setInterval(function() {
 /* =========================
    カウント処理
 ========================= */
-
+}
 function manualCount() {
 
-// 🎵 ピコッ♪音
-const audioContext =
-    new (window.AudioContext || window.webkitAudioContext)();
+    // 🎵 ピコッ♪音
+    try {
+        const audioContext =
+            new (window.AudioContext || window.webkitAudioContext)();
 
-const oscillator =
-    audioContext.createOscillator();
+        const oscillator =
+            audioContext.createOscillator();
 
-const gainNode =
-    audioContext.createGain();
+        const gainNode =
+            audioContext.createGain();
 
-oscillator.type = "sine";
+        oscillator.type = "sine";
 
-oscillator.frequency.setValueAtTime(
-    880,
-    audioContext.currentTime
-);
+        oscillator.frequency.setValueAtTime(
+            880,
+            audioContext.currentTime
+        );
 
-oscillator.frequency.exponentialRampToValueAtTime(
-    1320,
-    audioContext.currentTime + 0.05
-);
+        oscillator.frequency.exponentialRampToValueAtTime(
+            1320,
+            audioContext.currentTime + 0.05
+        );
 
-gainNode.gain.setValueAtTime(
-    0.06,
-    audioContext.currentTime
-);
+        gainNode.gain.setValueAtTime(
+            0.06,
+            audioContext.currentTime
+        );
 
-gainNode.gain.exponentialRampToValueAtTime(
-    0.001,
-    audioContext.currentTime + 0.08
-);
+        gainNode.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioContext.currentTime + 0.08
+        );
 
-oscillator.connect(gainNode);
-gainNode.connect(audioContext.destination);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
 
-oscillator.start();
+        oscillator.start();
 
-oscillator.stop(
-    audioContext.currentTime + 0.08
-);
+        oscillator.stop(
+            audioContext.currentTime + 0.08
+        );
 
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
-
-    oscillator.start();
-    oscillator.stop(
-        audioContext.currentTime + 0.06
-    );
+    } catch (e) {
+        // 音が鳴らなくてもカウントには影響させない
+    }
 
 
     // 📱 押している感じ
-    if (navigator.vibrate) {
-        navigator.vibrate(10);
+    try {
+        if (navigator.vibrate) {
+            navigator.vibrate(10);
+        }
+    } catch (e) {
     }
 
 
