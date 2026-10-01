@@ -344,7 +344,12 @@ preOctoberTotal + "回" +
     document.getElementById("total").textContent =
         "⭐️ 累計：" + total + "回";
 
+
 function countUp() {
+
+    // 🎯 変更前の回数を記録
+    const previousCount = count;
+
     count++;
 
     document.getElementById("count").textContent = count;
@@ -381,8 +386,8 @@ function countUp() {
     );
 
 
-    // 🎉 100回達成ランダムコメント
-    if (count === 200) {
+    // 🎉 100回をまたいだらコメント
+    if (previousCount < 100 && count >= 100) {
 
         const comments = [
             "🎉 100回達成！今日もツイてる！",
@@ -415,7 +420,6 @@ function countUp() {
         }, 3000);
     }
 }
-
 
 
 
