@@ -381,6 +381,39 @@ preOctoberTotal + "回" +
     );
 }
 
+  // 🎉 100回達成ランダムコメント
+    if (count === 100) {
+
+        const comments = [
+            "🎉 100回達成！今日もツイてる！",
+            "🍀 おめでとう！まずは100回クリア！",
+            "😊 おおっ、100回！いい感じです！",
+            "🌱 今日のツイてる、育ってますね！",
+            "✨ 100回いただきました！",
+            "🎊 祝・100回！まだまだツイてる！",
+            "😆 100回言ったあなた、やっぱりツイてる！",
+            "🍀 小さな積み重ねが、100回に！",
+            "🎯 本日の第一目標、クリア！",
+            "🌈 100回達成！この調子でいきましょう！",
+            "👏 100回！ナイスツイてるです！",
+            "💚 100回達成！今日もいい流れ！",
+            "⭐️ 100回クリア！ツイてるパワー上昇中！",
+            "😄 100回達成！まだまだいけそうですね！",
+            "🍀 100回のツイてる、おめでとう！",
+            "🎉 まずは100回！素晴らしいです！"
+        ];
+
+        const randomIndex =
+            Math.floor(Math.random() * comments.length);
+
+        document.getElementById("count").textContent =
+            comments[randomIndex];
+
+        setTimeout(function() {
+            document.getElementById("count").textContent =
+                count;
+        }, 3000);
+    }
 
 
 
