@@ -451,6 +451,35 @@ function countUp() {
 
 
     // =====================================
+    // 🎊 今日1,000回達成
+    // =====================================
+
+    if (previousCount < 1000 && count >= 1000) {
+
+        const comments1000 = [
+            "🎊✨ 1,000回達成！今日のツイてる、絶好調！",
+            "🍀🎉 祝・1,000回！ツイてるパワー全開！",
+            "🌈⭐️ 1,000回クリア！今日もたっぷりツイてる！",
+            "👏🍀 1,000回！これは立派なツイてるです！",
+            "🔥🎉 1,000回突破！ツイてるが止まりません！",
+            "✨🌱 1,000回達成！今日のツイてる、育ちました！",
+            "🎊😆 1,000回！ここまで来るとは、やっぱりツイてる！",
+            "⭐️🍀 1,000回達成！素晴らしい一日です！"
+        ];
+
+        const randomComment =
+            comments1000[
+                Math.floor(
+                    Math.random() * comments1000.length
+                )
+            ];
+
+        document.getElementById("status").textContent =
+            randomComment;
+    }
+
+
+    // =====================================
     // ⭐️ 累計1万回ごとの達成
     // =====================================
 
@@ -472,7 +501,7 @@ function countUp() {
             "🎉🌈 累計" + milestone.toLocaleString() + "回達成！素晴らしいツイてるです！",
             "✨🍀 累計" + milestone.toLocaleString() + "回！ツイてるパワー上昇中！",
             "👏🎊 累計" + milestone.toLocaleString() + "回達成！これはすごい！",
-            "⭐️🍀 累計" + milestone.toLocaleString() + "回！ツイてるの輪が広がっています！"
+            "⭐️🍀 累計" + milestone.toLocaleString() + "回！ツイてるの積み重ねですね！"
         ];
 
         const randomComment =
@@ -507,7 +536,7 @@ function countUp() {
             "👑🎊✨ 累計" + milestone.toLocaleString() + "回達成！超・ツイてるです！！",
             "🌈👑 累計" + milestone.toLocaleString() + "回！ここまで来ましたか！お見事です！！",
             "🎉🍀👑 累計" + milestone.toLocaleString() + "回達成！ツイてるパワー全開です！！",
-            "⭐️✨🎊 累計" + milestone.toLocaleString() + "回！これは記念すべきツイてるです！！",
+            "⭐️✨🎊 累計" + milestone.toLocaleString() + "回！記念すべきツイてるです！！",
             "🔥🍀👑 累計" + milestone.toLocaleString() + "回突破！ツイてるが大爆発！！",
             "🎊🌟👑 累計" + milestone.toLocaleString() + "回達成！本当におめでとうございます！！"
         ];
