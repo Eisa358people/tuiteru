@@ -295,7 +295,7 @@ function showDailyRecords() {
                 "</div>";
 
             message +=
-                "<hr style='margin:20px 0;>";
+                "<hr style='margin:20px 0;'>";
         }
 
 
@@ -321,11 +321,31 @@ function showDailyRecords() {
                     "</div>";
             }
         });
+
+
+        // 📚 正式運用前の記録
+        const preOctoberTotal = Number(
+            localStorage.getItem("tuiteruPreOctoberTotal") || 0
+        );
+
+        message +=
+            "<hr style='margin:25px 0 20px;'>" +
+            "<div style='font-size:20px; margin-bottom:6px;'>" +
+            "📚 正式運用前の記録" +
+            "</div>" +
+            "<div style='font-size:16px; margin-bottom:8px;'>" +
+            "（正式運用：2026年10月1日）" +
+            "</div>" +
+            "<div style='font-size:18px; margin:6px;'>" +
+            preOctoberTotal.toLocaleString() +
+            "回" +
+            "</div>";
     }
 
     box.innerHTML = message;
     box.style.display = "block";
 }
+
 
 
  
