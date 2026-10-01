@@ -176,6 +176,42 @@ button:nth-of-type(4) {
 </div>
 
 <script>
+// 📚 正式運用開始前（2026年9月まで）の記録を保存
+if (localStorage.getItem("tuiteruPreOctoberTotal") === null) {
+
+    const total = Number(
+        localStorage.getItem("tuiteruTotal") || 0
+    );
+
+    const dailyRecords = JSON.parse(
+        localStorage.getItem("tuiteruDailyRecords") || "{}"
+    );
+
+    let octoberAndAfter = 0;
+
+    Object.keys(dailyRecords).forEach(function(date) {
+
+        const parts = date.split("/");
+
+        const year = Number(parts[0]);
+        const month = Number(parts[1]);
+
+        if (
+            year > 2026 ||
+            (year === 2026 && month >= 10)
+        ) {
+            octoberAndAfter += Number(dailyRecords[date] || 0);
+        }
+    });
+
+    const preOctoberTotal =
+        Math.max(0, total - octoberAndAfter);
+
+    localStorage.setItem(
+        "tuiteruPreOctoberTotal",
+        preOctoberTotal
+    );
+}
 
 let count = 0;
 let recognition = null;
