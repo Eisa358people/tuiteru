@@ -303,19 +303,32 @@ function showDailyRecords() {
         message +=
             "<div style='font-size:20px; margin-bottom:10px;'>📅 過去の記録</div>";
 
+        let previousYear = null;
+
         dates.forEach(function(date) {
 
             if (date !== today) {
 
                 const parts = date.split("/");
 
-                const displayDate =
-                    parts[1] + "月" + parts[2] + "日";
+                const year = Number(parts[0]);
+                const month = Number(parts[1]);
+                const day = Number(parts[2]);
+
+                // 年が変わったら年を表示
+                if (year !== previousYear) {
+
+                    message +=
+                        "<div style='font-size:20px; font-weight:bold; margin-top:18px; margin-bottom:8px;'>" +
+                        "📌 " + year + "年" +
+                        "</div>";
+
+                    previousYear = year;
+                }
 
                 message +=
                     "<div style='font-size:18px; margin:6px;'>" +
-                    displayDate +
-                    "　" +
+                    month + "月" + day + "日　" +
                     dailyRecords[date] +
                     "回" +
                     "</div>";
@@ -345,6 +358,7 @@ function showDailyRecords() {
     box.innerHTML = message;
     box.style.display = "block";
 }
+
 
 
 
