@@ -1,0 +1,1018 @@
+
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#f6fff0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="ツイてるカウンター">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.json">
+<title>🍀 ツイてるカウンター 🍀</title>
+
+<style>
+:root {
+  --green: #168b45;
+  --dark-green: #176b35;
+  --cream: #f6fff0;
+  --soft-green: #e0f8dc;
+  --soft-red: #ffe4df;
+  --soft-yellow: #fff4c7;
+  --soft-blue: #dff3ff;
+  --soft-purple: #eee4ff;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  padding: 24px 18px 34px;
+  text-align: center;
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+  background: radial-gradient(ellipse at top, #fffef0 0%, var(--cream) 48%, #efffe9 100%);
+  color: #171717;
+  touch-action: manipulation;
+  overflow-x: hidden;
+}
+.app-shell { width: 100%; max-width: 560px; margin: 0 auto; position: relative; }
+.app-title {
+  margin: 8px 0 28px;
+  line-height: 1.08;
+  font-size: clamp(36px, 8vw, 54px);
+  font-weight: 900;
+  letter-spacing: .01em;
+  color: var(--dark-green);
+  text-shadow: 0 3px 0 #fff, 0 5px 0 #d9efc9;
+}
+.app-title .title-line-one, .app-title .title-line-two { display: block; }
+.app-title .title-line-one { white-space: nowrap; }
+.app-title .title-line-two { margin-top: 8px; color: #55311d; }
+.title-clover { display: inline-block; filter: drop-shadow(0 3px 1px #b7dfa0); }
+.title-arc { height: 8px; width: 82%; margin: 13px auto 0; border-top: 7px solid #ffe66e; border-radius: 50%; transform: rotate(-2deg); }
+.count-panel {
+  position: relative;
+  margin: 20px 0 18px;
+  padding: 20px 10px;
+  border: 5px solid #d0f5b9;
+  border-radius: 999px;
+  background: rgba(255,255,255,.78);
+  box-shadow: 0 8px 18px rgba(89, 166, 65, .14), inset 0 2px 5px rgba(255,255,255,.95);
+}
+#count { font-size: clamp(100px, 24vw, 142px); line-height: 1.05; font-weight: 500; margin: 0; font-variant-numeric: tabular-nums; }
+#total {
+  display: inline-block;
+  max-width: 100%;
+  margin: 12px auto 24px;
+  padding: 8px 22px;
+  border-radius: 999px;
+  background: rgba(255, 251, 222, .72);
+  font-size: clamp(23px, 5.2vw, 32px);
+  font-weight: 750;
+}
+.button-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 4px 0 14px; }
+button {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%; min-width: 0;
+  padding: 20px 12px;
+  margin: 0;
+  border: 3px solid rgba(255,255,255,.65);
+  border-radius: 30px;
+  box-shadow: 0 5px 0 rgba(40, 80, 40, .07), inset 0 2px 0 rgba(255,255,255,.55);
+  cursor: pointer;
+  font: inherit;
+  font-size: clamp(20px, 4.6vw, 29px);
+  font-weight: 750;
+  line-height: 1.2;
+  color: #167fe0;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  transition: transform .08s ease, filter .12s ease;
+}
+button:active { transform: translateY(2px); filter: brightness(.97); }
+.btn-start { background: linear-gradient(135deg, #e5ffe2, #d2f6cf); border-color: #c6efbd; color: #16894a; }
+.btn-stop { background: linear-gradient(135deg, #fff0e9, #ffdcd5); border-color: #ffc9bd; color: #c83e48; }
+.btn-manual { background: linear-gradient(135deg, #fff9d9, #ffefb0); border-color: #ffeba0; color: #75400a; }
+.btn-reset { background: linear-gradient(135deg, #e3f7ff, #ccecff); border-color: #c5eaff; color: #078de0; }
+.btn-settings { background: linear-gradient(135deg, #f5edff, #e7dcff); border-color: #e3d7ff; color: #7545cb; }
+.manual-wrap { margin: 0 0 16px; }
+.manual-wrap button { width: min(100%, 420px); padding-top: 22px; padding-bottom: 22px; }
+#manualSelected { display: block; color: #d33; font-size: 15px; min-height: 1em; margin-top: 4px; }
+.bottom-buttons { display: grid; grid-template-columns: 1.1fr .9fr; gap: 14px; }
+#status { font-size: 18px; line-height: 1.5; min-height: 2.8em; margin: 24px 8px 12px; color: #315d36; }
+#settings { margin-top: 22px; padding: 18px 14px; border: 2px solid #d5efca; border-radius: 22px; background: rgba(255,255,255,.88); overflow-wrap: anywhere; }
+#settings h2 { color: var(--dark-green); }
+#settings button { margin: 6px 0; font-size: 18px; padding: 14px 12px; border-radius: 18px; }
+#dailyRecords { text-align: center; }
+#backupStatus { overflow-wrap: anywhere; }
+.garden-footer { margin-top: 26px; font-size: 28px; letter-spacing: 7px; line-height: 1.3; filter: drop-shadow(0 3px 2px #d7edc6); }
+@media (max-width: 380px) {
+  body { padding: 18px 12px 26px; }
+  .app-title { font-size: 34px; }
+  .button-grid, .bottom-buttons { gap: 9px; }
+  button { padding: 17px 7px; border-radius: 23px; font-size: 19px; }
+  .manual-wrap button { padding: 19px 8px; }
+  #total { padding: 7px 12px; }
+}
+@media (orientation: landscape) and (max-height: 600px) {
+  body { padding-top: 8px; }
+  .app-title { font-size: 28px; margin: 2px 0 10px; }
+  .app-title .title-line-two { margin-top: 3px; }
+  .title-arc { margin-top: 5px; }
+  .count-panel { margin: 8px 0; padding: 6px; }
+  #count { font-size: 58px; }
+  #total { font-size: 18px; margin: 3px auto 8px; }
+  .button-grid { gap: 8px; margin-bottom: 8px; }
+  button { font-size: 18px; padding: 9px; border-radius: 18px; }
+  .manual-wrap { margin-bottom: 8px; }
+  .manual-wrap button { padding: 9px; }
+  #status { margin: 8px; font-size: 14px; }
+  .garden-footer { display: none; }
+}
+</style>
+</head>
+
+<body>
+<div class="app-shell">
+<h1 class="app-title">
+    <span class="title-line-one"><span class="title-clover">🍀</span> ツイてる！</span>
+    <span class="title-line-two">カウンター <span class="title-clover">🍀</span></span>
+    <div class="title-arc"></div>
+</h1>
+
+<div class="count-panel"><div id="count">0</div></div>
+
+<div id="total">⭐️ 累計：0回</div>
+
+<div class="button-grid">
+  <button class="btn-start" onclick="startVoice()">▶️ スタート</button>
+  <button class="btn-stop" onclick="stopVoice()">⏹ 停止</button>
+</div>
+<div class="manual-wrap">
+  <button class="btn-manual" onclick="manualCount()">👆 手動カウント</button>
+  <span id="manualSelected"></span>
+</div>
+<div class="bottom-buttons">
+  <button class="btn-reset" onclick="resetCount()">🔄 リセット</button>
+  <button class="btn-settings" onclick="openSettings()">⚙️ 設定</button>
+</div>
+<div id="settings" style="display:none; margin-top:20px;">
+  <div id="settingsHome">
+    <h2>⚙️ 設定</h2>
+    <button onclick="showDailyRecords()">📅 日別記録</button>
+    <div id="dailyRecords" style="display:none; max-height:50vh; overflow-y:auto; padding:10px;"></div>
+    <hr style="margin:20px 10px;">
+    <button type="button" onclick="openBackupScreen()" style="background:linear-gradient(135deg,#e4f7df,#fff4cc); color:#347c35; font-size:18px; min-width:220px;">
+      💾 バックアップ・復元
+    </button>
+    <button onclick="closeSettings()">閉じる</button>
+  </div>
+
+  <div id="backupScreen" style="display:none;">
+    <h2>💾 バックアップ・復元</h2>
+    <p style="font-size:16px; line-height:1.7; margin:12px;">
+      累計・日別記録・正式運用前の記録を保存できます。<br>
+      復元すると、現在の記録はバックアップの内容に置き換わります。
+    </p>
+    <button onclick="exportBackup()" style="background-color:#d9f2d9; font-size:20px; min-width:220px;">
+      💾 バックアップを保存
+    </button>
+    <br>
+    <button onclick="document.getElementById('backupFile').click()" style="background-color:#dceeff; font-size:20px; min-width:220px;">
+      📂 バックアップから復元
+    </button>
+    <input id="backupFile" type="file" accept=".json,application/json" style="display:none;" onchange="importBackup(event)">
+    <div id="backupStatus" style="font-size:16px; line-height:1.5; margin:12px;"></div>
+    <button type="button" onclick="backToSettingsHome()">← 設定に戻る</button>
+  </div>
+</div>
+<div id="status">
+「スタート」を押して「ツイてる！」と言ってください
+</div>
+<div class="garden-footer" aria-hidden="true">🍀 🌱 🍀 🌿 🍀</div>
+</div>
+
+<script>
+// 📚 正式運用開始前（2026年9月まで）の記録を保存
+if (localStorage.getItem("tuiteruPreOctoberTotal") === null) {
+
+    const total = Number(
+        localStorage.getItem("tuiteruTotal") || 0
+    );
+
+    const dailyRecords = JSON.parse(
+        localStorage.getItem("tuiteruDailyRecords") || "{}"
+    );
+
+    let octoberAndAfter = 0;
+
+    Object.keys(dailyRecords).forEach(function(date) {
+
+        const parts = date.split("/");
+
+        const year = Number(parts[0]);
+        const month = Number(parts[1]);
+
+        if (
+            year > 2026 ||
+            (year === 2026 && month >= 10)
+        ) {
+            octoberAndAfter += Number(dailyRecords[date] || 0);
+        }
+    });
+
+    const preOctoberTotal =
+        Math.max(0, total - octoberAndAfter);
+
+    localStorage.setItem(
+        "tuiteruPreOctoberTotal",
+        preOctoberTotal
+    );
+}
+
+let count = 0;
+let recognition = null;
+let listening = false;
+let stopping = false;
+
+let currentDate = new Date().toLocaleDateString("ja-JP");
+setInterval(function() {
+    const today = new Date().toLocaleDateString("ja-JP");
+
+    if (today !== currentDate) {
+
+        // 🌅 今日のカウントを0にする
+        count = 0;
+
+        document.getElementById("count").textContent = 0;
+
+        // 新しい日へ
+        currentDate = today;
+
+        document.getElementById("status").textContent =
+            "🌅 新しい一日が始まりました！";
+    }
+}, 1000);
+
+      
+
+/* =========================
+   カウント処理
+========================= */
+
+function manualCount() {
+    if (listening) {
+        stopVoice();
+    }
+
+    countUp();
+   
+}
+
+
+function showDailyRecords() {
+    const dailyRecords = JSON.parse(
+        localStorage.getItem("tuiteruDailyRecords") || "{}"
+    );
+
+    const box = document.getElementById("dailyRecords");
+
+    let message = "🍀 ツイてる記録 🍀<br><br>";
+
+    const dates = Object.keys(dailyRecords).reverse();
+
+    if (dates.length === 0) {
+        message += "まだ記録がありません。";
+    } else {
+
+        // 🌱 今日
+        const today = new Date().toLocaleDateString("ja-JP");
+
+        if (dailyRecords[today] !== undefined) {
+
+            const todayCount = dailyRecords[today];
+
+            let comment = "";
+
+            if (todayCount < 100) {
+                comment = "🌱 まずは一歩！";
+            } else if (todayCount < 1000) {
+                comment = "🍀 いい感じ！今日もツイてる！";
+            } else {
+                comment = "🎉 1,000回突破！すごーい！";
+            }
+
+            message +=
+                "<div style='font-size:20px;'>🌱 今日</div>" +
+                "<div style='font-size:40px; font-weight:bold; margin:8px;'>" +
+                todayCount + "回" +
+                "</div>" +
+                "<div style='font-size:18px; margin-bottom:25px;'>" +
+                comment +
+                "</div>";
+
+            message +=
+                "<hr style='margin:20px 0;'>";
+        }
+
+
+        // 📅 過去の記録
+        message +=
+            "<div style='font-size:20px; margin-bottom:10px;'>📅 過去の記録</div>";
+
+        let previousYear = null;
+
+        dates.forEach(function(date) {
+
+            if (date !== today) {
+
+                const parts = date.split("/");
+
+                const year = Number(parts[0]);
+                const month = Number(parts[1]);
+                const day = Number(parts[2]);
+
+                // 年が変わったら年を表示
+                if (year !== previousYear) {
+
+                    message +=
+                        "<div style='font-size:20px; font-weight:bold; margin-top:18px; margin-bottom:8px;'>" +
+                        "📌 " + year + "年" +
+                        "</div>";
+
+                    previousYear = year;
+                }
+
+                message +=
+                    "<div style='font-size:18px; margin:6px;'>" +
+                    month + "月" + day + "日　" +
+                    dailyRecords[date] +
+                    "回" +
+                    "</div>";
+            }
+        });
+
+
+        // 📚 正式運用前の記録
+        const preOctoberTotal = Number(
+            localStorage.getItem("tuiteruPreOctoberTotal") || 0
+        );
+
+        message +=
+            "<hr style='margin:25px 0 20px;'>" +
+            "<div style='font-size:20px; margin-bottom:6px;'>" +
+            "📚 正式運用前の記録" +
+            "</div>" +
+            "<div style='font-size:16px; margin-bottom:8px;'>" +
+            "（正式運用：2026年10月1日）" +
+            "</div>" +
+            "<div style='font-size:18px; margin:6px;'>" +
+            preOctoberTotal.toLocaleString() +
+            "回" +
+            "</div>";
+    }
+
+    box.innerHTML = message;
+    box.style.display = "block";
+}
+
+
+
+
+ 
+function countUp() {
+
+    // 🎯 前回の回数を保存
+    const previousCount = count;
+
+    // 今日のカウント
+    count++;
+
+    document.getElementById("count").textContent = count;
+
+
+    // ⭐️ 累計
+    let total = Number(
+        localStorage.getItem("tuiteruTotal") || 0
+    );
+
+    const previousTotal = total;
+
+    total++;
+
+    localStorage.setItem(
+        "tuiteruTotal",
+        total
+    );
+
+    document.getElementById("total").textContent =
+        "⭐️ 累計：" + total + "回";
+
+
+    // 📅 今日の日別記録
+    const today = new Date()
+        .toLocaleDateString("ja-JP");
+
+    let dailyRecords = JSON.parse(
+        localStorage.getItem("tuiteruDailyRecords") || "{}"
+    );
+
+    dailyRecords[today] =
+        Number(dailyRecords[today] || 0) + 1;
+
+    localStorage.setItem(
+        "tuiteruDailyRecords",
+        JSON.stringify(dailyRecords)
+    );
+
+
+    // =====================================
+    // 🌱 今日100回達成
+    // =====================================
+
+    if (previousCount < 100 && count >= 100) {
+
+        const comments100 = [
+            "🎉 100回達成！今日もツイてる！",
+            "🍀 おめでとう！100回クリア！",
+            "😊 おおっ、100回！いい感じです！",
+            "🌱 今日のツイてる、育ってますね！",
+            "✨ 100回いただきました！",
+            "🎊 祝・100回！まだまだツイてる！",
+            "😆 100回言ったあなた、やっぱりツイてる！",
+            "🍀 小さな積み重ねが、100回に！",
+            "🎯 本日の第一目標、クリア！",
+            "🌈 100回達成！この調子でいきましょう！"
+        ];
+
+        const randomComment =
+            comments100[
+                Math.floor(
+                    Math.random() * comments100.length
+                )
+            ];
+
+        document.getElementById("status").textContent =
+            randomComment;
+    }
+
+
+    // =====================================
+    // 🎉 今日500回達成
+    // =====================================
+
+    if (previousCount < 500 && count >= 500) {
+
+        const comments500 = [
+            "🎊 500回達成！かなりツイてます！",
+            "🍀 500回！今日のツイてるパワー全開！",
+            "🎉 500回クリア！ここまで来ましたね！",
+            "🌈 500回のツイてる！素晴らしい！",
+            "⭐️ 祝・500回！今日はかなりツイてる日！",
+            "😆 500回言った人、やっぱりツイてる！",
+            "🔥 500回突破！ツイてるが止まりません！",
+            "👏 500回達成！お見事です！"
+        ];
+
+        const randomComment =
+            comments500[
+                Math.floor(
+                    Math.random() * comments500.length
+                )
+            ];
+
+        document.getElementById("status").textContent =
+            randomComment;
+    }
+
+
+    // =====================================
+    // 🎊 今日1,000回達成
+    // =====================================
+
+    if (previousCount < 1000 && count >= 1000) {
+
+        const comments1000 = [
+            "🎊✨ 1,000回達成！今日のツイてる、絶好調！",
+            "🍀🎉 祝・1,000回！ツイてるパワー全開！",
+            "🌈⭐️ 1,000回クリア！今日もたっぷりツイてる！",
+            "👏🍀 1,000回！これは立派なツイてるです！",
+            "🔥🎉 1,000回突破！ツイてるが止まりません！",
+            "✨🌱 1,000回達成！今日のツイてる、育ちました！",
+            "🎊😆 1,000回！ここまで来るとは、やっぱりツイてる！",
+            "⭐️🍀 1,000回達成！素晴らしい一日です！"
+        ];
+
+        const randomComment =
+            comments1000[
+                Math.floor(
+                    Math.random() * comments1000.length
+                )
+            ];
+
+        document.getElementById("status").textContent =
+            randomComment;
+    }
+
+
+    // =====================================
+    // ⭐️ 累計1万回ごとの達成
+    // =====================================
+
+    const previousTenThousand =
+        Math.floor(previousTotal / 10000);
+
+    const currentTenThousand =
+        Math.floor(total / 10000);
+
+
+    if (currentTenThousand > previousTenThousand) {
+
+        const milestone =
+            currentTenThousand * 10000;
+
+        const comments10000 = [
+            "🎊✨ 累計" + milestone.toLocaleString() + "回達成！ツイてるの積み重ねです！",
+            "🍀⭐️ 累計" + milestone.toLocaleString() + "回！ここまでツイてるを続けました！",
+            "🎉🌈 累計" + milestone.toLocaleString() + "回達成！素晴らしいツイてるです！",
+            "✨🍀 累計" + milestone.toLocaleString() + "回！ツイてるパワー上昇中！",
+            "👏🎊 累計" + milestone.toLocaleString() + "回達成！これはすごい！",
+            "⭐️🍀 累計" + milestone.toLocaleString() + "回！ツイてるの積み重ねですね！"
+        ];
+
+        const randomComment =
+            comments10000[
+                Math.floor(
+                    Math.random() * comments10000.length
+                )
+            ];
+
+        document.getElementById("status").textContent =
+            randomComment;
+    }
+
+
+    // =====================================
+    // 👑 累計10万回ごとの超特別達成
+    // =====================================
+
+    const previousHundredThousand =
+        Math.floor(previousTotal / 100000);
+
+    const currentHundredThousand =
+        Math.floor(total / 100000);
+
+
+    if (currentHundredThousand > previousHundredThousand) {
+
+        const milestone =
+            currentHundredThousand * 100000;
+
+        const comments100000 = [
+            "👑🎊✨ 累計" + milestone.toLocaleString() + "回達成！超・ツイてるです！！",
+            "🌈👑 累計" + milestone.toLocaleString() + "回！ここまで来ましたか！お見事です！！",
+            "🎉🍀👑 累計" + milestone.toLocaleString() + "回達成！ツイてるパワー全開です！！",
+            "⭐️✨🎊 累計" + milestone.toLocaleString() + "回！記念すべきツイてるです！！",
+            "🔥🍀👑 累計" + milestone.toLocaleString() + "回突破！ツイてるが大爆発！！",
+            "🎊🌟👑 累計" + milestone.toLocaleString() + "回達成！本当におめでとうございます！！"
+        ];
+
+        const randomComment =
+            comments100000[
+                Math.floor(
+                    Math.random() * comments100000.length
+                )
+            ];
+
+        document.getElementById("status").textContent =
+            randomComment;
+    }
+}
+
+
+
+
+
+/* =========================
+   リセット
+========================= */
+
+function resetCount() {
+
+    count = 0;
+
+    document.getElementById("count").textContent =
+        count;
+
+    document.getElementById("status").textContent =
+        "🔄 リセットしました";
+}
+
+
+/* =========================
+   ツイてる！と言う
+========================= */
+
+function sayTuiteru() {
+
+    const speech =
+        new SpeechSynthesisUtterance("ツイてる！");
+
+    speech.lang = "ja-JP";
+    speech.rate = 1.0;
+    speech.pitch = 1.1;
+
+    window.speechSynthesis.cancel();
+
+    window.speechSynthesis.speak(speech);
+}
+
+
+/* =========================
+   「ツイてる」の回数を数える
+========================= */
+
+function countTuiteru(text) {
+
+    text = text
+        .replace(/[！!。、，,？?]/g, "")
+        .replace(/\s/g, "");
+
+    const pattern =
+        /ついている|ついてます|ついてるよ|ツイてるよ|ツイッテル|ツイてます|ツイてる|ついてる|ツイテル|シンテル/g;
+
+    const matches =
+        text.match(pattern);
+
+    return matches ? matches.length : 0;
+}
+
+
+/* =========================
+   ページを開いた時
+   ⭐️ 累計：を復元
+========================= */
+
+window.addEventListener("load", function() {
+
+    const total =
+        Number(
+            localStorage.getItem("tuiteruTotal") || 0
+        );
+
+    document.getElementById("total").textContent =
+        "⭐️ 累計：" + total + "回";
+});
+
+
+/* =========================
+   音声認識をもう一度開始
+========================= */
+
+function listenAgain() {
+
+    if (!listening || stopping) {
+        return;
+    }
+
+    try {
+
+        recognition.start();
+
+        document.getElementById("status").textContent =
+            "🎤 聞いています……「ツイてる！」";
+
+    } catch (e) {
+
+        setTimeout(
+            listenAgain,
+            300
+        );
+    }
+}
+
+
+/* =========================
+   音声認識スタート
+========================= */
+
+function startVoice() {
+ const SpeechRecognition =
+        window.SpeechRecognition ||
+        window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+
+        document.getElementById("status").textContent =
+            "このブラウザは音声認識に対応していません。";
+
+        return;
+    }
+
+    if (listening) {
+        return;
+    }
+
+    stopping = false;
+    listening = true;
+
+    recognition =
+        new SpeechRecognition();
+
+    recognition.lang = "ja-JP";
+
+    recognition.continuous = false;
+
+    recognition.interimResults = false;
+
+    recognition.maxAlternatives = 5;
+
+
+    /* =====================
+       音声認識結果
+    ===================== */
+
+    recognition.onresult =
+        function(event) {
+
+            let hitCount = 0;
+
+            let heardText =
+                event.results[0][0].transcript;
+
+
+            for (
+                let i = 0;
+                i < event.results[0].length;
+                i++
+            ) {
+
+                const text =
+                    event.results[0][i].transcript;
+
+                const n =
+                    countTuiteru(text);
+
+                if (n > hitCount) {
+
+                    hitCount = n;
+                }
+            }
+
+
+            /* =================
+               ツイてるを認識
+            ================= */
+
+            if (hitCount > 0) {
+
+                for (
+                    let i = 0;
+                    i < hitCount;
+                    i++
+                ) {
+
+                    countUp();
+                }
+
+                document.getElementById("status").textContent =
+                    "🍀 ツイてる！ × " + hitCount;
+
+                sayTuiteru();
+
+            } else {
+
+                document.getElementById("status").textContent =
+                    "👂「" + heardText + "」と聞こえました";
+            }
+        };
+
+
+    /* =====================
+       エラー
+    ===================== */
+
+    recognition.onerror =
+        function() {
+
+            if (!stopping) {
+
+                setTimeout(
+                    listenAgain,
+                    300
+                );
+            }
+        };
+
+
+    /* =====================
+       音声認識終了
+    ===================== */
+
+    recognition.onend =
+        function() {
+
+            if (!stopping) {
+
+                setTimeout(
+                    listenAgain,
+                    300
+                );
+            }
+        };
+
+
+    /* =====================
+       開始
+    ===================== */
+
+    listenAgain();
+}
+
+
+/* =========================
+   停止
+========================= */
+
+function stopVoice() {
+
+    stopping = true;
+
+    listening = false;
+
+    if (recognition) {
+
+        try {
+
+            recognition.stop();
+
+        } catch (e) {
+
+        }
+    }
+
+    document.getElementById("status").textContent =
+        "⏹ 停止しました";
+}
+
+// 💾 記録のバックアップを書き出す
+function exportBackup() {
+    try {
+        const backup = {
+            app: "ツイてるカウンター",
+            backupVersion: 1,
+            exportedAt: new Date().toISOString(),
+            data: {
+                tuiteruTotal: localStorage.getItem("tuiteruTotal") || "0",
+                tuiteruDailyRecords: localStorage.getItem("tuiteruDailyRecords") || "{}",
+                tuiteruPreOctoberTotal: localStorage.getItem("tuiteruPreOctoberTotal") || "0"
+            }
+        };
+
+        const blob = new Blob(
+            [JSON.stringify(backup, null, 2)],
+            { type: "application/json;charset=utf-8" }
+        );
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        const date = new Date();
+        const dateStamp =
+            date.getFullYear() +
+            String(date.getMonth() + 1).padStart(2, "0") +
+            String(date.getDate()).padStart(2, "0");
+
+        link.href = url;
+        link.download = "tuiteru-backup-" + dateStamp + ".json";
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(function() {
+            URL.revokeObjectURL(url);
+        }, 1000);
+
+        document.getElementById("backupStatus").textContent =
+            "✅ バックアップファイルの保存を開始しました。保存先をご確認ください。";
+    } catch (error) {
+        document.getElementById("backupStatus").textContent =
+            "⚠️ 保存できませんでした。もう一度お試しください。";
+    }
+}
+
+// 📂 バックアップファイルから記録を復元する
+function importBackup(event) {
+    const file = event.target.files && event.target.files[0];
+    const status = document.getElementById("backupStatus");
+
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        try {
+            const backup = JSON.parse(reader.result);
+
+            if (
+                !backup ||
+                backup.app !== "ツイてるカウンター" ||
+                !backup.data ||
+                typeof backup.data.tuiteruTotal !== "string" ||
+                typeof backup.data.tuiteruDailyRecords !== "string" ||
+                typeof backup.data.tuiteruPreOctoberTotal !== "string"
+            ) {
+                throw new Error("形式が違います");
+            }
+
+            const total = Number(backup.data.tuiteruTotal);
+            const preOctober = Number(backup.data.tuiteruPreOctoberTotal);
+            const dailyRecords = JSON.parse(backup.data.tuiteruDailyRecords);
+
+            if (
+                !Number.isFinite(total) || total < 0 ||
+                !Number.isFinite(preOctober) || preOctober < 0 ||
+                !dailyRecords ||
+                typeof dailyRecords !== "object" ||
+                Array.isArray(dailyRecords)
+            ) {
+                throw new Error("データが正しくありません");
+            }
+
+            for (const date in dailyRecords) {
+                if (
+                    !Object.prototype.hasOwnProperty.call(dailyRecords, date) ||
+                    !Number.isFinite(Number(dailyRecords[date])) ||
+                    Number(dailyRecords[date]) < 0
+                ) {
+                    throw new Error("日別記録が正しくありません");
+                }
+            }
+
+            const confirmed = window.confirm(
+                "バックアップの記録を復元します。\n" +
+                "現在の累計・日別記録・正式運用前の記録は、バックアップの内容に置き換わります。\n\n" +
+                "復元する前に、必要なら現在の記録もバックアップしてください。\n\n" +
+                "復元を続けますか？"
+            );
+
+            if (!confirmed) {
+                status.textContent = "復元をキャンセルしました。現在の記録は変更していません。";
+                return;
+            }
+
+            localStorage.setItem("tuiteruTotal", String(total));
+            localStorage.setItem(
+                "tuiteruDailyRecords",
+                JSON.stringify(dailyRecords)
+            );
+            localStorage.setItem(
+                "tuiteruPreOctoberTotal",
+                String(preOctober)
+            );
+
+            status.textContent = "✅ 復元しました。アプリを再読み込みします…";
+            setTimeout(function() {
+                window.location.reload();
+            }, 700);
+        } catch (error) {
+            status.textContent =
+                "⚠️ このファイルを読み込めませんでした。ツイてるカウンターのバックアップファイルか確認してください。";
+        } finally {
+            event.target.value = "";
+        }
+    };
+
+    reader.onerror = function() {
+        status.textContent = "⚠️ ファイルを読み込めませんでした。";
+        event.target.value = "";
+    };
+
+    reader.readAsText(file);
+}
+
+function openSettings() {
+    document.getElementById("settings").style.display = "block";
+    document.getElementById("settingsHome").style.display = "block";
+    document.getElementById("backupScreen").style.display = "none";
+}
+
+function closeSettings() {
+    document.getElementById("settings").style.display = "none";
+}
+
+function openBackupScreen() {
+    document.getElementById("settingsHome").style.display = "none";
+    document.getElementById("backupScreen").style.display = "block";
+}
+
+function backToSettingsHome() {
+    document.getElementById("backupScreen").style.display = "none";
+    document.getElementById("settingsHome").style.display = "block";
+}
+  
+
+</script>
+
+</body>
+</html>
